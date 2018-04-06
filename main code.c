@@ -1,63 +1,132 @@
 #include<stdio.h>
+struct task {
+    int name;
+    int arT, brT, crT, wrT, trT;
+    int processed;
+    
+} p[10];
  
-int main()
+int n;
+void sortTheArrival()
 {
-      int burst_time[20], process[20], waiting_time[20], turnaround_time[20], priority[20];
-      int i, j, limit, sum = 0, position, temp;
-      float average_wait_time, average_turnaround_time;
+    struct task temp;
+    int i, j;
+ 
+    // Selection Sort applied
+    for (i = 0; i < n - 1; i++) {
+        for (j = i + 1; j < n; j++) {
+ 
+            // Check for lesser arrival time
+            if (p[i].arT > p[j].arT) {
+ 
+                // Swap earlier process to front
+                temp = p[i];
+                p[i] = p[j];
+                p[j] = temp;
+            }
+        }
+    }
+}
+int main(){
+	 int burst_time[20],arrival[20];
+     int i, j, t, sum_bt = 0;
+     char c;
+     float avgwt = 0, avgtt = 0;
       printf("Enter Total Number of Processes:\t");
-      scanf("%d", &limit);
-      printf("\nEnter Burst Time and Priority For %d Processes\n", limit);
-      for(i = 0; i < limit; i++)
+      scanf("%d", &n);
+      printf("\nEnter Burst Time  and arrival time For %d Processes\n", n);
+      for(i = 0; i < n; i++)
       {
             printf("\nProcess[%d]\n", i + 1);
             printf("Process Burst Time:\t");
             scanf("%d", &burst_time[i]);
-            printf("Process Priority:\t");
-            scanf("%d", &priority[i]);
-            process[i] = i + 1;
+           
+            printf("Process Arrival-Time:\t");
+            scanf("%d", &arrival[i]);
       }
-      for(i = 0; i < limit; i++)
-      {
-            position = i;
-            for(j = i + 1; j < limit; j++)
-            {
-                  if(priority[j] < priority[position])
-                  {
-                        position = j;
-                  }
+	    for (i = 0; i < n; i++) {
+	    	 p[i].name = i+1;
+       
+        p[i].arT = arrival[i];
+        p[i].brT =burst_time[i];
+ 
+        // Variable for Completion status
+        // Pending = 0
+        // processed = 1
+        p[i].processed = 0;
+ 
+        // Variable for sum of all Burst Times
+        sum_bt += p[i].brT;
+    }
+ 
+    // Sorting the structure by arrival times
+    sortTheArrival();
+    printf("\nName\tArrival Time\tBurst Time\tWaiting Time");
+    printf("\tTurnAround Time\t");
+    for (t = p[0].arT; t < sum_bt;) {
+ 
+        // Set lower limit to response ratio
+        float priority = -1;
+ 
+        // Response Ratio Variable
+        float temp;
+ 
+        // Variable to store next processs selected
+        int location;
+        for (i = 0; i < n; i++) {
+ 
+            // Checking if process has arrived and is Incomplete
+            if (p[i].arT <= t && p[i].processed != 1) {
+ 
+                // Calculating Response Ratio
+                temp = 1+ (t - p[i].arT) / p[i].brT;
+                
+                // Checking for Highest Response Ratio
+                if (priority < temp) {
+ 
+                    // Storing Response Ratio
+                    priority = temp;
+ 
+                    // Storing Location
+                    location = i;
+                }
             }
-            temp = priority[i];
-            priority[i] = priority[position];
-            priority[position] = temp; 
-            temp = burst_time[i];
-            burst_time[i] = burst_time[position];
-            burst_time[position] = temp;
-            temp = process[i];
-            process[i] = process[position];
-            process[position] = temp;
-      }
-      waiting_time[0] = 0;
-      for(i = 1; i < limit; i++)
-      {
-            waiting_time[i] = 0;
-            for(j = 0; j < i; j++)
-            {
-                  waiting_time[i] = waiting_time[i] + burst_time[j];
-            }
-            sum = sum + waiting_time[i];
-      }
-      average_wait_time = sum / limit;
-      sum = 0;
-      printf("\nProcess ID\t\tBurst Time\t Waiting Time\t Turnaround Time\n");
-      for(i = 0; i < limit; i++)
-      {
-            turnaround_time[i] = burst_time[i] + waiting_time[i];
-            sum = sum + turnaround_time[i];
-            printf("\nProcess[%d]\t\t%d\t\t %d\t\t %d\n", process[i], burst_time[i], waiting_time[i], turnaround_time[i]);
-      }
-      average_turnaround_time = sum / limit;
-      printf("\nAverage Waiting Time:\t%f", average_wait_time);
-      printf("\nAverage Turnaround Time:\t%f\n", average_turnaround_time);
-      return 0;
+        }
+ 
+        // Updating time value
+        t += p[location].brT;
+ 
+        // Calculation of waiting time
+        p[location].wrT = t - p[location].arT - p[location].brT;
+ 
+        // Calculation of Turn Around Time
+        p[location].trT = t - p[location].arT;
+ 
+        // Sum Turn Around Time for average
+        avgtt += p[location].trT;
+ 
+        // Calculation of Normalized Turn Around Time
+        
+ 
+        // Updating Completion Status
+        p[location].processed = 1;
+ 
+        // Sum Waiting Time for average
+        avgwt += p[location].wrT;
+        printf("\n%d\t\t%d\t\t", p[location].name,p[location].arT);
+        printf("%d\t\t%d\t\t", p[location].brT, p[location].wrT);
+        printf("%d\t", p[location].trT);
+    }
+    printf("\nAverage waiting time:%f\n", avgwt / n);
+    printf("Average Turn Around time:%f\n", avgtt / n);
+    return 0;
 }
+	
+	
+	
+	
+	
+	
+	
+	
+	
