@@ -103,7 +103,7 @@ void *scheduling(void *args){
             }
         }
 
-        // Updating time value
+        // Update time value
         t += p[location].brT;
 
         // Calculation of waiting time
