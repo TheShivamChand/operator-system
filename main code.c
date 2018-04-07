@@ -5,7 +5,7 @@ struct task {
     int arT, brT, crT, wrT, trT;
     int processed;
 
-} p[10];
+} p[20];
 
 void *scheduling(void *args);
 
