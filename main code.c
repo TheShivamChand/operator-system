@@ -15,7 +15,7 @@ void sortTheArrival()
     struct task temp;
     int i, j;
 
-    // Selection Sort applied
+    // use Selection Sort 
     for (i = 0; i < n - 1; i++) {
         for (j = i + 1; j < n; j++) {
 
@@ -75,7 +75,7 @@ void *scheduling(void *args){
     printf("\tTurnAround Time\t");
     for (t = p[0].arT; t < sum_bt;) {
 
-        // Set lower limit to Priority
+        // Set lower bound to Priority
         float priority = -1;
 
         // Priority Variable
