@@ -126,4 +126,5 @@ void *scheduling(void *args){
     }
     printf("\nAverage waiting time:%f\n", avgwt / n);
     printf("Average Turn Around time:%f\n", avgtt / n);
+    printf("Average total time:%f\n", (avgtt+avgwt) / n);		
 }
